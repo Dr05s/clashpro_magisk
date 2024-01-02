@@ -1,0 +1,7 @@
+id=clashpro_magisk
+name=ClashPro Magisk/KernelSU
+version=v1.0.0
+versionCode=20231228
+author=Dr05s
+description=use sing-box, clash, v2ray, and xray for tunnel proxy on android device
+updateJson=https://github.com/Dr05s/clashpro_magisk/raw/master/update.json

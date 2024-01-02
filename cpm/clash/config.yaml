@@ -1,0 +1,394 @@
+# port: 7890
+# socks-port: 7891
+# mixed-port: 7890
+redir-port: 9797
+tproxy-port: 9898
+mode: rule
+allow-lan: true
+unified-delay: true
+bind-address: '*'
+log-level: silent
+ipv6: true
+# geodata-loader: memconservative
+external-controller: 0.0.0.0:9090 
+# secret: "123456"
+external-ui: /data/adb/cpm/clash/dashboard
+# tcp-concurrent: false
+
+profile:
+  store-selected: true
+  store-fake-ip: false
+
+tun:
+  enable: false
+  device: utun
+  mtu: 9000
+  stack: system # gvisor / lwip / system
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+  auto-route: true
+  auto-detect-interface: true
+
+dns:
+  enable: true
+  ipv6: true
+  default-nameserver:
+    - 8.8.8.8
+    - 1.1.1.1
+  listen: 0.0.0.0:1053
+  use-hosts: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - '*.lan'
+    - "*.local"
+  nameserver:
+    # google
+    - 8.8.8.8
+    - 1.0.0.1
+
+ # nameserver-policy:
+  # server akun
+   # '+.biznet1.nexsusvpn.me,+.dray.josvpn.me': '112.215.198.248'
+  # bug
+   # 'graph.facebook.com': '112.215.198.248'
+
+proxies:
+proxy-groups:
+- name: SPEEDTEST ⚡
+  type: select
+  strategy: round-robin
+  disable-udp: false
+  proxies:
+  - BALANCE
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '120'
+- name: INTERNET-UMUM 🌏
+  type: select
+  disable-udp: false
+  proxies:
+  - BALANCE
+  - FALLBACK
+  - BESTPING
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '120'
+- name: SOSIAL-MEDIA 📲
+  type: select
+  disable-udp: false
+  proxies:
+  - BALANCE
+  - FALLBACK
+  - BESTPING
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '120'
+- name: STREAMING 📽️
+  type: select
+  disable-udp: false
+  proxies:
+  - BALANCE
+  - FALLBACK
+  - BESTPING
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '120'
+- name: TRAFIK-AKUN-INDO 🛑
+  type: select
+  strategy: round-robin
+  disable-udp: false
+  proxies:
+  - BALANCE
+  - FALLBACK
+  - BESTPING
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '120'
+- name: PLAY-IN-GAME 🎮
+  type: select
+  disable-udp: false
+  proxies:
+  - DIRECT
+  - FALLBACK
+  - BESTPING
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '120'
+- name: DOWNLOAD-DATA-GAME 🕹️
+  type: select
+  disable-udp: false
+  proxies:
+  - DIRECT
+  - FALLBACK
+  - BALANCE
+  - BESTPING
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '120'
+- name: BANK-BELANJA-EWALLET 💰
+  type: select
+  disable-udp: false
+  proxies:
+  - DIRECT
+  - FALLBACK
+  - BESTPING
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '120'
+- name: CALL-WHATSAPP 📞
+  type: select
+  strategy: round-robin
+  disable-udp: false
+  proxies:
+  - DIRECT
+  - FALLBACK
+  - BESTPING
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '120'
+- name: REMOT-ZERO-TIER ⚠️
+  type: select
+  strategy: consistent-hashing
+  disable-udp: false
+  proxies:
+  - DIRECT
+  - FALLBACK
+  - BESTPING
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '120'
+- name: BLOKIR-IKLAN-PORN ❌
+  type: select
+  strategy: round-robin
+  disable-udp: false
+  proxies:
+  - REJECT
+  - FALLBACK
+  - BESTPING
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '120'
+- name: BALANCE
+  type: load-balance
+  strategy: round-robin
+  disable-udp: false
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '300'
+- name: FALLBACK
+  type: fallback
+  strategy: round-robin
+  disable-udp: false
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '300'
+- name: BESTPING
+  type: url-test
+  strategy: round-robin
+  disable-udp: false
+  use:
+  - AKUN-VPN
+  url: http://www.gstatic.com/generate_204
+  interval: '300'
+
+proxy-providers:
+  AKUN-VPN:
+    type: file
+    path: "./proxy_provider/AKUN-VPN.yaml"
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 30
+      
+rule-providers:
+  RP-Gamingport:
+    type: file
+    behavior: classical
+    path: "./rule_provider/2-game-custom.yaml"
+  RP-Gaming:
+    type: file
+    behavior: classical
+    path: "./rule_provider/2-gaming.yaml"
+  RP-Sosmed:
+    type: file
+    behavior: classical
+    path: "./rule_provider/2-sosmed.yaml"
+  RP-Streaming:
+    type: file
+    behavior: classical
+    path: "./rule_provider/2-streaming.yaml"
+  RP-Speedtest:
+    type: file
+    behavior: classical
+    path: "./rule_provider/2-speedtest.yaml"
+  RP-Callwa:
+    type: file
+    behavior: classical
+    path: "./rule_provider/2-RP-Callwa.yaml"  
+  RP-Iklan:
+    type: file
+    behavior: classical
+    path: "./rule_provider/2-iklan.yaml"
+  adaway:
+    type: http
+    behavior: classical
+    path: "./rule_provider/2-adaway.yaml"
+    url: https://raw.githubusercontent.com/hillz2/openclash_adblock/main/adaway.yaml
+    interval: 14400 # Update rules every 4 hours
+  adguard_dns:
+    type: http
+    behavior: classical
+    path: "./rule_provider/2-AdguardDNS.yaml"
+    url: https://raw.githubusercontent.com/hillz2/openclash_adblock/main/AdguardDNS.yaml
+    interval: 14400 # Update rules every 4 hours
+  abpindo:
+    type: http
+    behavior: classical
+    path: "./rule_provider/2-ABPindo.yaml"
+    url: https://raw.githubusercontent.com/hillz2/openclash_adblock/main/ABPindo.yaml
+    interval: 14400 # Update rules every 4 hours
+  RP-Zero:
+    type: file
+    behavior: classical
+    path: "./rule_provider/2-zerotier.yaml"
+#rulindo
+  RP-Belanja:
+    type: file
+    behavior: classical
+    path: "./rule_provider/2-belanja.yaml" 
+  rule_Indo:
+    type: file
+    behavior: classical
+    path: "./rule_provider/2-indo.yaml"
+  rule_disneyplus:
+    type: file
+    behavior: classical
+    path: "./rule_provider/2-rule_disneyplus.yaml"
+  rule_netflix:
+    type: file
+    behavior: domain
+    path: "./rule_provider/2-rule_netflix.yaml"
+  rule_direct:
+    type: file
+    behavior: classical
+    path: "./rule_provider/0-DIRECT.yaml"
+      
+rules:
+- IP-CIDR,198.18.0.1/16,REJECT,no-resolve
+- RULE-SET,rule_direct,DIRECT
+- RULE-SET,RP-Sosmed,SOSIAL-MEDIA 📲
+- RULE-SET,RP-Streaming, STREAMING 📽️
+- RULE-SET,rule_Indo,TRAFIK-AKUN-INDO 🛑
+- RULE-SET,rule_disneyplus,TRAFIK-AKUN-INDO 🛑
+- RULE-SET,rule_netflix,TRAFIK-AKUN-INDO 🛑
+- RULE-SET, RP-Belanja,BANK-BELANJA-EWALLET 💰
+- RULE-SET,RP-Gaming,DOWNLOAD-DATA-GAME 🕹️
+- RULE-SET,RP-Gamingport,PLAY-IN-GAME 🎮
+- RULE-SET,RP-Speedtest,SPEEDTEST ⚡
+- RULE-SET,RP-Callwa,CALL-WHATSAPP 📞
+- RULE-SET,RP-Iklan,BLOKIR-IKLAN-PORN ❌
+- RULE-SET,abpindo,BLOKIR-IKLAN-PORN ❌
+- RULE-SET,adguard_dns,BLOKIR-IKLAN-PORN ❌
+- RULE-SET,adaway,BLOKIR-IKLAN-PORN ❌
+- RULE-SET,RP-Zero,REMOT-ZERO-TIER ⚠️
+
+#MLBB
+- DST-PORT,5000-5221/5224-5227/5229-5241/5243-5287/5289-5352/5354-5509/5517/5520-5529/5551-5559/5601-5700/8443/9000-9010/9443/10003/30000-30300,PLAY-IN-GAME 🎮,tcp
+
+- DST-PORT,5517-5529/5551-5559/5601-5700/8001/8130/8443/9000-9010/9120/9992/10003/30000-30300,PLAY-IN-GAME 🎮,udp
+
+#FF
+- DST-PORT,6006/6008/6674/7006-7008/7889/8001-8012/9006/9137/10000-10012/11000-11019/12006/12008/13006/15006/20561/39003/39006/39698/39779/39800,PLAY-IN-GAME 🎮,tcp
+
+- DST-PORT,6006/6008/6674/7006-7008/7889/8008/8001-8012/8130/8443/9008/9120/10000-10015/10100/11000-11019/12008/13008,PLAY-IN-GAME 🎮,udp
+
+#PUBG
+- DST-PORT,7889/10012/13004/14000/17000/17500/18081/20000-20002/20371,PLAY-IN-GAME 🎮,tcp
+
+- DST-PORT,8011/9030/10491/10612/12235/13004/13748/17000/17500/20000-20002/7086-7995/10039/10096/11455/12070-12460/13894/13972/41182-41192,PLAY-IN-GAME 🎮,udp
+
+#CODM
+- DST-PORT,3013/10000-10019/18082/50000/65010/65050,PLAY-IN-GAME 🎮,tcp
+
+- DST-PORT,7085-7995/8700/9030/10010-10019/17000-20100,PLAY-IN-GAME 🎮,udp
+
+#AOV
+- DST-PORT,10001-10094,PLAY-IN-GAME 🎮,tcp
+
+- DST-PORT,10101-10201/10080-10110/17000-18000,PLAY-IN-GAME 🎮,udp
+
+#Stumble Guys
+- DST-PORT,5055-5058,PLAY-IN-GAME 🎮,udp
+
+#Genshin Impact
+- DST-PORT,42472,PLAY-IN-GAME 🎮,tcp
+- DST-PORT,42472/22101-22102,PLAY-IN-GAME 🎮,udp
+
+#Clash of Clans (COC) & Clash Royale
+- DST-PORT,9330-9340,PLAY-IN-GAME 🎮,tcp
+- DST-PORT,9330-9340,PLAY-IN-GAME 🎮,udp
+
+#League of Legends (LOL) Mobile
+- DST-PORT,2080-2099,PLAY-IN-GAME 🎮,tcp
+- DST-PORT,5100,PLAY-IN-GAME 🎮,udp
+
+#DOTA2
+- DST-PORT,9100-9200/8230-8250/8110-8120/27000-28998,PLAY-IN-GAME 🎮,tcp
+- DST-PORT,27000-28998/39000,PLAY-IN-GAME 🎮,udp
+
+#FIFA ONLINE
+- DST-PORT,7770-7790,PLAY-IN-GAME 🎮,tcp
+- DST-PORT,16300-16350,PLAY-IN-GAME 🎮,udp
+
+#Point Blank Mobile (PB-Mobile)
+- DST-PORT,44590-44610,PLAY-IN-GAME 🎮,tcp
+- DST-PORT,40000-40010,PLAY-IN-GAME 🎮,udp
+
+#LINE Let’s Get Rich
+- DST-PORT,10500-10515,PLAY-IN-GAME 🎮,tcp
+
+#Dream League Soccer
+- DST-PORT,60970-60980,PLAY-IN-GAME 🎮,udp
+
+#Among Us
+- DST-PORT,27015-27030/27036-27037,PLAY-IN-GAME 🎮,tcp
+
+- DST-PORT,4380/27000-27031/27036,PLAY-IN-GAME 🎮,udp
+
+#Bleach ES
+- DST-PORT,14422,PLAY-IN-GAME 🎮
+
+# growrtopia
+- DST-PORT,16999,PLAY-IN-GAME 🎮
+
+# apex|ff|mlbbb
+- DST-PORT,8888,PLAY-IN-GAME 🎮
+#Seven Knight
+- DST-PORT,12000-12010,PLAY-IN-GAME 🎮,tcp
+
+#DOMINO QQ
+- DST-PORT,9122/11000-11150,PLAY-IN-GAME 🎮,tcp
+
+#DOMINO QQ 2
+- DST-PORT,50001-50500,PLAY-IN-GAME 🎮,tcp
+- DST-PORT,5353/40000-40010,PLAY-IN-GAME 🎮,udp
+
+#BOOYA DOMINO QIUQIU
+- DST-PORT,7020-7030,PLAY-IN-GAME 🎮,tcp
+
+- MATCH,GLOBAL
