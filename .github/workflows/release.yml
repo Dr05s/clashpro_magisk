@@ -6,9 +6,6 @@ on:
       tag:
         description: 'Release Tag'
         required: true
-      branch:
-        description: 'Push Changes'
-        required: true
 
 jobs:
   build:
@@ -38,7 +35,7 @@ jobs:
           git config --local user.email "${{ secrets.EMAIL }}"
           git add update.json module.prop
           git commit -m "${{ github.event.inputs.tag }}"
-          git push -f origin "${{github.event.inputs.branch}}"
+          git push -f origin master
  
       - name: run build.sh
         run: |
