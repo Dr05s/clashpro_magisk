@@ -135,7 +135,7 @@ if [ -z "$(find /data/adb/cpm/bin -type f)" ]; then
   sed -Ei 's/^description=(\[.*][[:space:]]*)?/description=[ 😱 Module installed but you need to download Kernel(xray clash v2fly sing-box) and GeoX(geosite geoip mmdb) manually ] /g' $MODPATH/module.prop
 fi
 
-[ "$KSU" = "true" ] && sed -i "s/name=.*/name=CPM for KernelSU/g" $MODPATH/module.prop || sed -i "s/name=.*/name=CPM for Magisk/g" $MODPATH/module.prop
+[ "$KSU" = "true" ] && sed -i "s/name=.*/name=ClashPro for KernelSU/g" $MODPATH/module.prop || sed -i "s/name=.*/name=ClashPro for Magisk/g" $MODPATH/module.prop
 
 ui_print "- Delete leftover files"
 rm -rf $MODPATH/cpm

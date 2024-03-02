@@ -37,7 +37,7 @@ enable_iptables() {
 }
 
 start_memless() {
-   "${scripts_dir}/memless" >> "/dev/null" 2>&1
+   ".${scripts_dir}/memless" >> "/dev/null" 2>&1
 }
 
 start_inotifyd() {

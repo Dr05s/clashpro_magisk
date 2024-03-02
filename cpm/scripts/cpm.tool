@@ -5,7 +5,7 @@ scripts_dir=$(dirname "${scripts}")
 source /data/adb/cpm/settings.ini
 
 # user agent
-user_agent="clashpro_magisk"
+user_agent="clashpro"
 # whether use ghproxy to accelerate github download
 use_ghproxy=false
 
@@ -349,11 +349,11 @@ upkernel() {
       ;;
     "clash")
       download_link="https://github.com/Dr05s/ClashPro/releases"
-      latest_version=$(wget --no-check-certificate -qO- "https://api.github.com/repos/MetaCubeX/Clash.Meta/releases" | grep "tag_name" | grep -o "v[0-9.]*" | head -1)
+      latest_version=$(wget --no-check-certificate -qO- "https://api.github.com/repos/Dr05s/ClashPro/releases" | grep "tag_name" | grep -o "v[0-9.]*" | head -1)
       tag="$latest_version"
 
       # set the filename based on platform and architecture
-      filename="clash.pro-${platform}-${arch}-${latest_version}"
+      filename="clash.pro-linux-${arch}-${latest_version}"
       # download and update the file
       log Debug "download ${download_link}/download/${tag}/${filename}.gz"
       upfile "${cpm_dir}/${file_kernel}.gz" "${download_link}/download/${tag}/${filename}.gz" && xkernel
