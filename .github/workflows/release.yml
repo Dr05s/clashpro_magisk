@@ -25,8 +25,8 @@ jobs:
             "zipUrl": "https://github.com/dr05s/clashpro_magisk/releases/download/${{ github.event.inputs.tag }}/clashpro_magisk-${{ github.event.inputs.tag }}.zip",
             "changelog": "https://github.com/dr05s/clashpro_magisk/raw/master/CHANGELOG.md"
           }' > update.json
-          sed -i "s/$(grep -oP 'version=\K[^ ]+' module.prop)/${{ github.event.inputs.tag }}/g" module.prop
-          sed -i "s/$(grep -oP 'versionCode=\K[^ ]+' module.prop)/$(date +%Y%m%d)/g" module.prop
+          sed -i "s/version=$(grep -oP 'version=\K[^ ]+' module.prop)/version=${{ github.event.inputs.tag }}/g" module.prop
+          sed -i "s/versionCode=$(grep -oP 'versionCode=\K[^ ]+' module.prop)/versionCode=$(date +%Y%m%d)/g" module.prop
  
       - name: run build.sh
         run: |
